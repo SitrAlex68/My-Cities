@@ -19,11 +19,13 @@ function UserReducer(state=initialState,action){
             nextState = {...state,
             crnt_role:action.value
         };
+        return nextState;
 
         case'crnt_id':
-        nextState = {...state,
-        crnt_id:action.value
-    };
+            nextState = {...state,
+            crnt_id:action.value
+        };
+        return nextState;
 
         default:
              return state;

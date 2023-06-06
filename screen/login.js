@@ -54,11 +54,11 @@ formdata.append("pass",this.state.pass);
     }).then((response) => response.json())
         .then((json) => {
           if(json != false){
-            const action1 = {type:"crnt_user",value:this.state.email};
             const action2 = {type:"crnt_role",value:json[0].user_status};
-            const action3 = {type:"crnt_id",value:json[0].user_id}
-            this.props.dispatch(action1);
             this.props.dispatch(action2);
+            const action1 = {type:"crnt_user",value:this.state.email};
+            this.props.dispatch(action1);
+            const action3 = {type:"crnt_id",value:json[0].user_id}
             this.props.dispatch(action3);
             navigate("valid");
           }else{
