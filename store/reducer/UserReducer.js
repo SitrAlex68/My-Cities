@@ -1,4 +1,4 @@
-const initialState = {users:[],crnt_usr:""};
+const initialState = {users:[],crnt_usr:"",crnt_role:"",crnt_id:""};
 
 function UserReducer(state=initialState,action){
     let nextState;
@@ -15,9 +15,21 @@ function UserReducer(state=initialState,action){
         };
         return nextState;
 
+        case'crnt_role':
+            nextState = {...state,
+            crnt_role:action.value
+        };
+
+        case'crnt_id':
+        nextState = {...state,
+        crnt_id:action.value
+    };
+
         default:
              return state;
     }
 }
 
 export default UserReducer;
+
+

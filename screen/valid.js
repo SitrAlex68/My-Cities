@@ -35,11 +35,16 @@ modif(){
     render(){
         
         const {crnt_usr} = this.props;
+        const {crnt_role} = this.props;
+        const {crnt_id} = this.props;
+
+        console.log(this.props.crnt_role);
+
         return (
             <View style={styles.container}>
                       <Text style={{color:'blue',fontSize: 22 , textAlign:'center'}}>Vous êtes connecté</Text>
                       <View style={{height: 20}}/>
-                      <Text>Bienvenue {crnt_usr} sur notre application d'inscription connection.</Text>
+                      <Text>Bienvenue {crnt_usr} {crnt_role} {crnt_id} sur notre application d'inscription connection.</Text>
                       <View style={{height: 20}}/>
                       <WhiteButton style={{height: 20}} val = "Modification"  onPress={() => this.modif()}></WhiteButton>
                       <WhiteButton style={{height: 20}} val = "Déconnexion"  onPress={() => this.deco()}></WhiteButton>

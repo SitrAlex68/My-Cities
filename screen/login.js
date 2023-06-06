@@ -17,79 +17,61 @@ class Login extends React.Component{
         super(props);
 
       this.state = {
-          login:"",
+          email:"",
           pass:"" 
         }
 
     }
 
 
-    
-
-    validation(){
-      const {users} = this.props;
-      console.log(this.props);
-      for(let i=0;i<users.length;i++){
-        if(users[i].login == this.state.login && this.state.pass == users[i].pass){
-          return true
-        } 
-      }
-      return false
-    }
-
-
-
-  testlogin(){
-    
-    this.checktable();
-    if(this.state.login == "" || this.state.pass == ""){
-      Alert.alert("non !");
-    }else{
-      this.checkpassword()
-        /*
-        const action2 = {type:"crnt_user",value:this.state.login};
-        this.props.dispatch(action2);
-        
-        navigate("valid");
-      }else{
-        Alert.alert("non non non!");
-      }*/
-    }
-  }
-
-
-  checkpassword(){
-    const {navigate} = this.props.navigation;
-    let tdata = [];
-    const db = SQLite.openDatabase("data.db");
-    db.transaction(trs => {
-    trs.executeSql("SELECT * FROM users WHERE user_name = ? AND user_pass = ?" , [this.state.login,this.state.pass] , (_, {rows: {_array}}) =>{
-      tdata = _array
-      console.log(tdata.length);
-      if(tdata.length > 0){
-        const action2 = {type:"crnt_user",value:this.state.login};
-        this.props.dispatch(action2);
-        navigate("valid");
-      
-      }else{
-        Alert.alert("non non non!");
-      }
-    }
-    );
-    })
-  }
   
 
-  checktable(){
-    console.log("test")
-    const db = SQLite.openDatabase("data.db");
-    db.transaction(trs => {
-    trs.executeSql("SELECT * FROM users" , [] , (_, {rows: {_array}}) =>
-    console.log(_array));
+checkpassword(){
+const formdata = new FormData;
+formdata.append("email",this.state.email);
+formdata.append("pass",this.state.pass);
+
+}
+
+
+  connexion(){
+    const {navigate} = this.props.navigation;
+
+    if(this.state.email == "" || this.state.pass == ""){
+      Alert.alert("Veuillez entrer des informations valides.");
+      return false;}
+
+      const formdata = new FormData;
+      formdata.append("email",this.state.email);
+      formdata.append("pass",this.state.pass);
+
+      fetch('http://jdevalik.fr/api/mycities/checkpass.php', {
+        method: 'POST', 
+        body: formdata, 
+        headers: {
+            "Content-Type": "multipart/form-data"
+        },
+    }).then((response) => response.json())
+        .then((json) => {
+          if(json != false){
+            const action1 = {type:"crnt_user",value:this.state.email};
+            const action2 = {type:"crnt_role",value:json[0].user_status};
+            const action3 = {type:"crnt_id",value:json[0].user_id}
+            this.props.dispatch(action1);
+            this.props.dispatch(action2);
+            this.props.dispatch(action3);
+            navigate("valid");
+          }else{
+            return false;
+          }
     })
+    
+
   }
 
-
+  test(){
+    console.log(this.checkpassword());
+  }
 
     render(){
       const {navigate} = this.props.navigation;
@@ -97,13 +79,12 @@ class Login extends React.Component{
             <View style={styless.container}>
                       <Text style={{color:'blue',fontSize: 22 , textAlign:'center'}}>Connexion</Text>
                       <View style={{height: 5}}/>
-                      <TextInput style={styles.input} value={this.state.login} onChangeText={text=> this.setState({login:text})}  placeholder="Login" keyboardType="text"/>
+                      <TextInput style={styles.input} value={this.state.email} onChangeText={text=> this.setState({email:text})}  placeholder="Email" keyboardType="text"/>
                       <View style={{height: 5}}/>
                       <TextInput style={styles.input} value={this.state.pass} onChangeText={text=> this.setState({pass:text})} placeholder="Mot de passe" keyboardType="text"/>
                       <View style={{height: 5}}/>
-                      <Button style={{margin:10}} color='blue'  title="Connexion" onPress={() => this.testlogin()}/>
+                      <Button style={{margin:10}} color='blue'  title="Connexion" onPress={() => this.connexion()}/>
                       <TouchableOpacity><Text style={{color:'blue',fontSize:16, textAlign:'center'}} onPress={() => navigate('inscription')}>S'inscrire</Text></TouchableOpacity>
-
             </View>
         )
     }
