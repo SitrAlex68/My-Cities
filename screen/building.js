@@ -1,4 +1,4 @@
-import { SafeAreaView, View, Text, Image, Button } from "react-native";
+import { SafeAreaView, View, Text, Image, Button, Alert } from "react-native";
 import React from "react";
 
 
@@ -28,6 +28,35 @@ export default class Building extends React.Component
             bd_favorite : false
         }
 
+}
+
+selectData = () =>
+{
+    const formdata = new FormData;
+    formdata.append("id", 1);
+    const {navigate} = this.props.navigation
+    fetch('http://jdevalik.fr/api/mycities/buildingbyid.php', {
+                method: 'POST', 
+                body: formdata, 
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                },
+            }).then((response) => response.json())
+                .then((json) => {
+                    if(json != false){
+                        console.log("json : " + json[0].build_name)
+                        this.setState({bd_name: json[0].build_name})
+                        this.setState({bd_description: json[0].build_desc})
+                        this.setState({bd_year: json[0].build_year})
+                        this.setState({bd_address: json[0].build_addresse})
+                    }else{
+                        navigate('Homepage');
+                    }
+                })
+                .catch((error) => {
+                        console.error(error);
+                    }
+                );
 }
 
 addToFavorite = () =>
@@ -62,7 +91,8 @@ render()
             <Text>année : {this.state.bd_year}</Text>
             <Text>architecte : {this.state.bd_architect}</Text>
             <Button onPress={
-                    !this.state.bd_favorite ? this.addToFavorite : this.removeFavorite
+                    this.selectData
+                    //!this.state.bd_favorite ? this.addToFavorite : this.removeFavorite
                 }
                 title=
                 {
