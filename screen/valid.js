@@ -29,9 +29,6 @@ modif(){
   navigate("modify");
 }
 
-
-
-
     render(){
         
         const {crnt_usr} = this.props;
